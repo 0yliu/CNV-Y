@@ -11,3 +11,7 @@ The input data files needed in this de novo CN duplication detection project are
     #sample_name	chr_num	start_snp	end_snp	start_pos	end_pos
     #FinalReport546	16	rs7196505	rs4887584	34373576	34637302
     #FinalReport831	22	rs138558	rs7288183	23994408	24244593
+#######################################################################
+4. $data file$. For each sample, the data file should be format as:
+    #SNPName,chrNum,Position,BAF,LRR,Gtype1,Gtype2
+
