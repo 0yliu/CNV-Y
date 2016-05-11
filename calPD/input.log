@@ -1,0 +1,4 @@
+# To calculate Phase Concordance Rate for a region of a sample.
+1. need to know the Haplotype information (phased results).
+2. need to run hapLOH.
+3. need to have the input region list.
