@@ -1,0 +1,17 @@
+The input data files needed in this de novo CN duplication detection project are:
+1. $clean marker list$. This ordered list has to contain only markers passing the QC in general process.
+    #SNPName	chrNum	Position
+    #rs12354060	1	10004
+    #rs12184279	1	707348
+2. $pedigree file list$. Each file in the list has to be a unique ID corresponding to the filename which we can easily locate in directories.
+    #kid_filename mom_filename  dad_filename
+    #FinalReport3506  FinalReport3508 FinalReport3507
+    #FinalReport6800  FinalReport6811 FinalReport6822
+3. $duplication list$. This list consists of the "duplication" region information we are interested in. It provides the sampleID, chromosome numbers, as well as the duplication startSNP, endSNP and the positions (mapInfo) for startSNP endSNP. 
+    #sample_name	chr_num	start_snp	end_snp	start_pos	end_pos
+    #FinalReport546	16	rs7196505	rs4887584	34373576	34637302
+    #FinalReport831	22	rs138558	rs7288183	23994408	24244593
+#######################################################################
+4. $data file$. For each sample, the data file should be format as:
+    #SNPName,chrNum,Position,BAF,LRR,Gtype1,Gtype2
+
