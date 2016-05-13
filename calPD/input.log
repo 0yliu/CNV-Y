@@ -2,3 +2,36 @@
 1. need to know the Haplotype information (phased results).
 2. need to run hapLOH.
 3. need to have the input region list.
+
+######### Backwards #############
+-------From hapLOH results to calculate PC score, the process is:
+#data requirement:
+  1. inputFilename = "eventsList.txt" ... or other names are fine too.
+      the list should contains $'sample_name','chr_num','startSNP','endSNP','startPos','endPos'$ for the region in each sample.
+  2. haploResultsDir = "data_for_hapLOH/" ---> workingDir.
+      this directory should have the following subdirectories: 
+      1). SNPs/ ------within this directory, the files should look like $sampleID+'_chr'+chrId+'.mkr'$
+      2). hapLOHoutput/ ------within this directory, the files should look like $sampleID+'_chr'+chrId$ +'.informative' || +'.switch_enumeration'
+      
+#cmd = ./code/calPhaseConcordance.py textfiles/inputDuplicationList.txt results/inputPCscore.txt data_for_hapLOH/
+
+
+-------To run hapLOH on data set:
+#data requirement:
+  1. data directory = "data_for_hapLOH/", it should contains:
+      1). SNPs/
+      2). hapLOHoutput/
+      3). Bafs/
+      4). Phased/
+      5). PhasedTmp/
+  2. sample list = "textfiles/inputDuplicationList.txt", it should look like:
+      ##sample_name	chr_num	start_snp	end_snp	start_pos	end_pos
+      ##FinalReport546	16	rs7196505	rs4887584	34373576	34637302
+      ##FinalReport831	22	rs138558	rs7288183	23994408	24244593
+  3. using code "run_hapLOH.py", it should print out the hapLOH running command then we can do parallel computing.
+      cmd = ./code/run_hapLOH.py textfiles/inputDuplicationList.txt data_for_hapLOH/ 
+#cmd = haploh --baf data_for_hapLOH/Bafs/FinalReport546_chr16.baf --phased data_for_hapLOH/Phased/FinalReport546_chr16.haploh --destdir data_for_hapLOH/hapLOHoutput/
+
+-------To get hapLOH input data:
+#data requirement:
+  1. phase 
