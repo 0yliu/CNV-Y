@@ -34,4 +34,22 @@
 
 -------To get hapLOH input data:
 #data requirement:
-  1. phase 
+  1. phased data.   "phased_Kids_Chr/FinalReport1000_chr10.ready.phased"
+      ##rs12264058	A	A
+      ##rs11591988	B	B
+      ##rs4508132	B	B
+  2. baf data.   "data_BAFLRR_GT_clean_Chr/kids/FinalReport1000_chr10.txt"
+      ##SNP.Name	Chr	Position	BAF	LRR	G1	G2
+      ##rs12264058	10	99640	0.0000	0.1443	A	A
+      ##rs11591988	10	116070	1.0000	0.0221	B	B
+  3. kids & parents sample names list. (just telling which directory to look for.)
+#cmd = ./code/getHapLOHinput.py 1000_1158 data_for_hapLOH/
+#output:
+    1). Bafs/1000_1158_chr10.baf
+    2). PhasedTmp/1000_1158_chr10.haplo1 & PhasedTmp/1000_1158_chr10.haplo2
+    3). SNPs/1000_1158_chr10.mkr
+
+-------To get phased data format as hapLOH input:
+#data requirement:
+  1. single haplotype data from "PhasedTmp/"
+#cmd = ./code/combinedHapLOHphasedtmp.py textfiles/sampleID.list
