@@ -1,4 +1,4 @@
-# CNV-Y
+# denovo CNV detection
 De novo Duplication source detection
 
 Before starting processing the data, there are several cleanning steps needed to be done.
