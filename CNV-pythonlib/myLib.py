@@ -522,3 +522,88 @@ def votingCount(dat):
 				u0sF+=1; u1sF+=1; u0sM+=1; u1sM+=1
 	return(u0sF,u1sF,u0sM,u1sM)
 
+############# calculating PHASE CONCORDANCE for a region with a sample.
+def getPhaseConcordanceScore(hapLOH_Dir,sampleID,markerFilename,startSNP,endSNP):
+        count = 1
+        markerDict = {}
+        for line in open(markerFilename).readlines():
+                SNPname = line.strip()
+                markerDict[SNPname] = count
+                count+=1
+        startID = markerDict[startSNP]
+        endID = markerDict[endSNP]
+
+        informativeMarkerFilename = hapLOH_Dir + sampleID + '.informative'
+        informativeMarkerTmp = open(informativeMarkerFilename).readline().strip().rsplit()
+        informativeMarkerIdx = [int(x) for x in informativeMarkerTmp]
+        print(len(informativeMarkerIdx))
+
+        locatorStart = bisect.bisect(informativeMarkerIdx,startID)
+        locatorEnd = bisect.bisect(informativeMarkerIdx,endID)
+        print(locatorStart,locatorEnd)
+
+        concordanceFilename = hapLOH_Dir + sampleID + '.switch_enumeration'
+        concordanceTmp = open(concordanceFilename).readline().strip().rsplit()
+        concordanceIdx = [int(x) for x in concordanceTmp]
+        print(len(concordanceIdx))
+
+        focusRegion = concordanceIdx[locatorStart:(locatorEnd+1)]
+        print(len(focusRegion))
+        try:
+                phaseConcordance = float(sum(focusRegion))/len(focusRegion)
+        except ZeroDivisionError:
+                phaseConcordance = 'NaN'
+                print('check %s!' % sampleID)
+        print(phaseConcordance)
+        return phaseConcordance
+
+####### calculating BAF (heterozygous markers only) standard deviation etc.
+def calBAF_stat(filename,missingLabel):
+        ## This is for checking the data quality:
+        # calculating the mean, median, and variation of BAF values of heterozygous markers in a region
+
+        # formatted samples from step1
+        # different directory for blood samples and nonBlood samples
+        #SNP.Name       Chr     Position        BAF     LRR     G1      G2
+        #rs12255619     10      88481   0.0015  -0.0789 A       A
+        #rs11591988     10      116070  0.9999  0.2305  G       G
+        #rs4508132      10      121636  0.4545  -0.0168 -       -
+        df = pd.read_table(filename,na_values=missingLabel)
+        df1 = df.dropna()
+        het_index = df1[ df1['G1']!=df1['G2'] ].index
+        df2 = df1.loc[het_index]
+        x = np.array(df2['BAF'])
+        print('BAF_mean (het markers) = %f' % numpy.mean(x))
+        print('BAF_median (het markers) = %f' % numpy.median(x))
+        print('BAF_std (het markers) = %f' % numpy.std(x))
+        return([np.mean(x),np.median(x),np.std(x)])
+
+####### calculating LRR standard deviation etc.
+def calLRR_stat(filename,missingLabel):
+        df = pd.read_table(filename,na_values=missingLabel)
+        df1 = df.dropna()
+        y = np.array(df1['LRR'])
+        print('LRR_mean = %f' % numpy.mean(y))
+        print('LRR_median = %f' % numpy.median(y))
+        print('LRR_std = %f' % numpy.std(y))
+        return([np.mean(y),np.median(y),np.std(y)])
+
+####### calculating missing genotype call rate:
+## This is for checking the data quality:
+# calculating the missing genotype rate for a single sample.
+## The input data format requirement:
+#SNP.Name       Chr     Position        BAF     LRR     G1      G2
+#rs12255619     10      88481   0.0015  -0.0789 A       A
+#rs11591988     10      116070  0.9999  0.2305  G       G
+#rs4508132      10      121636  0.4545  -0.0168 -       -
+def calMissingCallRate(filename, missingLabel):
+        '''
+        filename contains the sample data information following the format requirement.
+        missingLabel is the one character need to be considered as missing in the two genotype columns G1 & G2.
+        '''
+        df = pd.read_table(filename, index_col=0,usecols=[0,5,6],na_values=missingLabel)
+        totalCount = len(df.index)
+        missingCount = max(df.isnull().sum())
+        missingCallRate = missingCount/totalCount
+        print('Sample %s has missing genotype call rate at %f' % (filename, missingCallRate))
+        return(missingCallRate)
